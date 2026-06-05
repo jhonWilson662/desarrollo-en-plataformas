@@ -1,0 +1,289 @@
+package com.example.componentes
+
+import android.os.Bundle
+import androidx.activity.ComponentActivity
+import androidx.activity.compose.setContent
+import androidx.activity.enableEdgeToEdge
+import androidx.compose.foundation.Image
+import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.ArrowBack
+import androidx.compose.material.icons.automirrored.filled.ArrowForward
+import androidx.compose.material.icons.filled.*
+import androidx.compose.material3.*
+import androidx.compose.runtime.*
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
+import com.example.componentes.ui.theme.ComponentesTheme
+import kotlinx.coroutines.launch
+
+class MainActivity : ComponentActivity() {
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        enableEdgeToEdge()
+        setContent {
+            ComponentesTheme {
+                // Variable simple para cambiar de página
+                var miPagina by remember { mutableStateOf(1) }
+
+                if (miPagina == 1) {
+                    Pantalla1(alSiguiente = { miPagina = 2 })
+                } else if (miPagina == 2) {
+                    Pantalla2(alAtras = { miPagina = 1 }, alSiguiente = { miPagina = 3 })
+                } else {
+                    Pantalla3(alAtras = { miPagina = 2 })
+                }
+            }
+        }
+    }
+}
+
+// ---------------------------------------------------------
+// SECCION 1: COMPONENTES 1 AL 10
+// ---------------------------------------------------------
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun Pantalla1(alSiguiente: () -> Unit) {
+    Scaffold(
+        topBar = { TopAppBar(title = { Text("Guía de Componentes 1-10") }) },
+        bottomBar = {
+            BottomAppBar {
+                Spacer(Modifier.weight(1f))
+                Button(onClick = alSiguiente) {
+                    Text("Siguiente")
+                    Icon(Icons.AutoMirrored.Filled.ArrowForward, null)
+                }
+            }
+        }
+    ) { relleno ->
+        Column(
+
+
+            modifier = Modifier.padding(relleno).padding(16.dp).fillMaxSize().verticalScroll(rememberScrollState()),
+            verticalArrangement = Arrangement.spacedBy(12.dp)
+        ) {
+            // 1. Text
+            Text("1. Esto es un componente de Texto")
+
+            // 2. TextField
+            var entrada1 by remember { mutableStateOf("") }
+            TextField(value = entrada1, onValueChange = { entrada1 = it }, label = { Text("2. Escribe aquí") })
+
+            // 3. OutlinedTextField
+            var entrada2 by remember { mutableStateOf("") }
+            OutlinedTextField(value = entrada2, onValueChange = { entrada2 = it }, label = { Text("3. Escribir con borde") })
+
+            // 4. Button
+            Button(onClick = { }) { Text("4. Botón Normal") }
+
+            // 5. OutlineButton
+            OutlinedButton(onClick = { }) { Text("5. Botón con Borde") }
+
+            // 6. TextButton
+            TextButton(onClick = { }) { Text("6. Botón de solo Texto") }
+
+            // 7. Image
+            Text("7. Imagen del sistema:")
+            Image(painterResource(id = android.R.drawable.ic_menu_gallery), null, Modifier.size(50.dp))
+
+            // 8. Icon
+            Row {
+                Icon(Icons.Default.Star, null, tint = Color.Yellow)
+                Text(" 8. Icono de estrella")
+            }
+
+            // 9. ProgressBar
+            Row {
+                CircularProgressIndicator(Modifier.size(30.dp))
+                Text(" 9. Barra de carga circular")
+            }
+
+            // 10. ProgressBar avanzado (Lineal)
+            var carga by remember { mutableStateOf(0.1f) }
+            Column {
+                Text("10. Barra lineal: ${(carga * 100).toInt()}%")
+                LinearProgressIndicator(progress = { carga }, modifier = Modifier.fillMaxWidth())
+                Button(onClick = { if (carga < 1f) carga += 0.1f else carga = 0f }) { Text("Cargar") }
+            }
+        }
+    }
+}
+
+// ---------------------------------------------------------
+// SECCION 2: COMPONENTES 11 AL 21
+// ---------------------------------------------------------
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun Pantalla2(alAtras: () -> Unit, alSiguiente: () -> Unit) {
+    Scaffold(
+        topBar = { TopAppBar(title = { Text("Guía de Componentes 11-21") }) },
+        bottomBar = {
+            BottomAppBar {
+                TextButton(onClick = alAtras) { Text("Atrás") }
+                Spacer(Modifier.weight(1f))
+                Button(onClick = alSiguiente) { Text("Siguiente") }
+            }
+        }
+    ) { relleno ->
+        Column(
+            modifier = Modifier.padding(relleno).padding(16.dp).fillMaxSize().verticalScroll(rememberScrollState()),
+            verticalArrangement = Arrangement.spacedBy(12.dp)
+        ) {
+            // 11. Switch
+            var interruptor by remember { mutableStateOf(false) }
+            Row { Switch(interruptor, { interruptor = it }); Text(" 11. Switch") }
+
+            // 12. CheckBox
+            var check1 by remember { mutableStateOf(false) }
+            Row { Checkbox(check1, { check1 = it }); Text(" 12. CheckBox") }
+
+            // 13. CheckBox con texto
+            var check2 by remember { mutableStateOf(true) }
+            Row(verticalAlignment = Alignment.CenterVertically) {
+                Checkbox(check2, { check2 = it })
+                Text("13. CheckBox con texto al lado")
+            }
+
+            // 14. Card
+            Card(Modifier.fillMaxWidth()) {
+                Text("14. Esto es una Card o Tarjeta", Modifier.padding(16.dp))
+            }
+
+            // 15. Surface
+            Surface(color = Color.LightGray, shape = MaterialTheme.shapes.small) {
+                Text(" 15. Surface (Superficie) ", Modifier.padding(8.dp))
+            }
+
+            // 16. BadgeBox
+            BadgedBox(badge = { Badge { Text("5") } }) {
+                Icon(Icons.Default.Mail, null)
+            }
+            Text("16. BadgeBox (Icono con número)")
+
+            // 17. Divider
+            Text("17. Divider (Línea divisoria):")
+            HorizontalDivider()
+
+            // 18. DropdownMenu
+            var abierto by remember { mutableStateOf(false) }
+            Box {
+                Button(onClick = { abierto = true }) { Text("18. Abrir Menú") }
+                DropdownMenu(abierto, { abierto = false }) {
+                    DropdownMenuItem(text = { Text("Opción 1") }, onClick = { abierto = false })
+                    DropdownMenuItem(text = { Text("Opción 2") }, onClick = { abierto = false })
+                }
+            }
+
+            // 19. Slider
+            var deslizar1 by remember { mutableStateOf(0.5f) }
+            Text("19. Slider: ${(deslizar1 * 10).toInt()}")
+            Slider(deslizar1, { deslizar1 = it })
+
+            // 20. Section Slider (con pasos)
+            var deslizar2 by remember { mutableStateOf(0f) }
+            Text("20. Section Slider: ${deslizar2.toInt()}")
+            Slider(deslizar2, { deslizar2 = it }, valueRange = 0f..100f, steps = 4)
+
+            // 21. AlertDialog
+            var alerta by remember { mutableStateOf(false) }
+            Button(onClick = { alerta = true }) { Text("21. Mostrar Diálogo") }
+            if (alerta) {
+                AlertDialog(
+                    onDismissRequest = { alerta = false },
+                    confirmButton = { TextButton({ alerta = false }) { Text("Cerrar") } },
+                    title = { Text("21. AlertDialog") },
+                    text = { Text("Este es un aviso importante.") }
+                )
+            }
+        }
+    }
+}
+
+// ---------------------------------------------------------
+// SECCION 3: COMPONENTES 22 AL 27 (ESTRUCTURA)
+// ---------------------------------------------------------
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun Pantalla3(alAtras: () -> Unit) {
+    val cajonState = rememberDrawerState(DrawerValue.Closed)
+    val corrutina = rememberCoroutineScope()
+    val snackbarHostState = remember { SnackbarHostState() }
+
+    // 27. ModalDrawer
+    ModalNavigationDrawer(
+        drawerState = cajonState,
+        drawerContent = {
+            ModalDrawerSheet {
+                Text("27. ModalDrawer (Menú Lateral)", Modifier.padding(16.dp))
+                Button(onClick = { corrutina.launch { cajonState.close() } }) { Text("Cerrar Menú") }
+            }
+        }
+    ) {
+        // 22. Scaffold
+        Scaffold(
+            snackbarHost = { SnackbarHost(snackbarHostState) },
+            topBar = {
+                // 23. TopAppBar
+                TopAppBar(
+                    title = { Text("22. Scaffold / 23. TopAppBar") },
+                    navigationIcon = {
+                        IconButton(onClick = { corrutina.launch { cajonState.open() } }) {
+                            Icon(Icons.Default.Menu, null)
+                        }
+                    }
+                )
+            },
+            // 25. BottomBar (NavigationBar)
+            bottomBar = {
+                NavigationBar {
+                    NavigationBarItem(
+                        selected = false,
+                        onClick = alAtras,
+                        icon = { Icon(Icons.AutoMirrored.Filled.ArrowBack, null) },
+                        label = { Text("Atrás") }
+                    )
+                    NavigationBarItem(
+                        selected = true,
+                        onClick = { },
+                        icon = { Icon(Icons.Default.Home, null) },
+                        label = { Text("25. BottomBar") }
+                    )
+                }
+            },
+            // 26. FloatingActionButton
+            floatingActionButton = {
+                FloatingActionButton(onClick = {
+                    // 24. SnackBar
+                    corrutina.launch { snackbarHostState.showSnackbar("24. Esto es un SnackBar") }
+                }) {
+                    Icon(Icons.Default.Add, null)
+                }
+            }
+        ) { relleno ->
+            Box(Modifier.padding(relleno).fillMaxSize(), contentAlignment = Alignment.Center) {
+                Text("", style = MaterialTheme.typography.titleLarge)
+            }
+        }
+    }
+}
+
+// --- VISTAS PREVIAS ---
+
+@Preview(showBackground = true, name = "Parte 1 (1-10)")
+@Composable
+fun Previa1() { ComponentesTheme { Pantalla1({}) } }
+
+@Preview(showBackground = true, name = "Parte 2 (11-21)")
+@Composable
+fun Previa2() { ComponentesTheme { Pantalla2({}, {}) } }
+
+@Preview(showBackground = true, name = "Parte 3 (22-27)")
+@Composable
+
+fun Previa3() { ComponentesTheme { Pantalla3({}) } }
