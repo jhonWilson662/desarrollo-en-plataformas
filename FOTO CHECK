@@ -1,0 +1,166 @@
+package com.example.fotocheck
+
+import android.os.Bundle
+import androidx.activity.ComponentActivity
+import androidx.activity.compose.setContent
+import androidx.activity.enableEdgeToEdge
+import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
+import androidx.compose.foundation.border
+import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.*
+import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
+import com.example.fotocheck.ui.theme.FOTOCHECKTheme
+
+class MainActivity : ComponentActivity() {
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        enableEdgeToEdge()
+        setContent {
+            FOTOCHECKTheme {
+                Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
+                    Box(
+                        modifier = Modifier
+                            .fillMaxSize()
+                            .padding(innerPadding),
+                        contentAlignment = Alignment.Center
+                    ) {
+                        FotoCheck(
+                            name = "Jhon wilson gomez",
+                            role = "Asesor Inmobiliaria",
+                            dni = "10281522",
+                            phone = "+51 992 807 780",
+                            email = "jhon@remax-realtygroup.com"
+                        )
+                    }
+                }
+            }
+        }
+    }
+}
+
+@Composable
+fun FotoCheck(
+    name: String,
+    role: String,
+    dni: String,
+    phone: String,
+    email: String,
+    modifier: Modifier = Modifier
+) {
+    Card(
+        modifier = modifier.width(300.dp),
+        elevation = CardDefaults.cardElevation(defaultElevation = 8.dp),
+        colors = CardDefaults.cardColors(containerColor = Color.White),
+        shape = RoundedCornerShape(16.dp)
+    ) {
+        Column(horizontalAlignment = Alignment.CenterHorizontally) {
+            // Cabecera
+            Box(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(140.dp)
+                    .background(Color(0xFF003DA5)),
+                contentAlignment = Alignment.TopEnd
+            ) {
+                Text(
+                    text = "RE/MAX",
+                    color = Color.White,
+                    fontWeight = FontWeight.Bold,
+                    modifier = Modifier.padding(16.dp)
+                )
+            }
+
+            // Foto de Perfil
+            Image(
+                painter = painterResource(id = com.example.fotocheck.R.drawable.junior),
+                contentDescription = null,
+                contentScale = ContentScale.Crop,
+                modifier = Modifier
+                    .size(120.dp)
+                    .offset(y = (-60).dp)
+                    .clip(CircleShape)
+                    .border(4.dp, Color.White, CircleShape)
+            )
+
+            // Información
+            Column(
+                modifier = Modifier
+                    .offset(y = (-40).dp)
+                    .padding(horizontal = 24.dp),
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
+                Text(text = name, fontWeight = FontWeight.Bold, fontSize = 20.sp)
+                Text(text = role, color = Color(0xFF003DA5), fontSize = 14.sp)
+                
+                Spacer(modifier = Modifier.height(20.dp))
+                
+                InfoField("DNI", dni)
+                InfoField("CEL", phone)
+                InfoField("EMAIL", email)
+                
+                Spacer(modifier = Modifier.height(20.dp))
+                Text(
+                    text = "",
+                    fontSize = 10.sp,
+                    color = Color.Gray,
+                    modifier = Modifier.padding(bottom = 16.dp)
+                )
+            }
+        }
+    }
+}
+
+@Composable
+fun InfoField(label: String, value: String) {
+    Row(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(vertical = 4.dp),
+        horizontalArrangement = Arrangement.Start
+    ) {
+        Text(
+            text = "$label:",
+            fontWeight = FontWeight.Bold,
+            fontSize = 13.sp,
+            color = Color.DarkGray,
+            modifier = Modifier.width(55.dp)
+        )
+        Text(
+            text = value,
+            fontSize = 13.sp,
+            color = Color.DarkGray
+        )
+    }
+}
+
+@Preview(showBackground = true, backgroundColor = 0xFFF5F5F5)
+@Composable
+fun FotoCheckPreview() {
+    FOTOCHECKTheme {
+        Box(
+            modifier = Modifier.fillMaxSize(),
+            contentAlignment = Alignment.Center
+        ) {
+            FotoCheck(
+                name = "Jhon wilson gomez",
+                role = "Asesor Inmobiliaria",
+                dni = "10281522",
+                phone = "+51 992 807 780",
+                email = "jhon@remax-realtygroup.com"
+            )
+        }
+    }
+}
