@@ -1,0 +1,53 @@
+@Preview
+@Composable
+fun MyComplexLayout() {
+    Column(
+        modifier = Modifier
+            .fillMaxSize()
+    ) {
+        Box(
+            modifier = Modifier
+                .fillMaxWidth()
+                .weight(1f)
+                .background(Color.Cyan),
+            contentAlignment = Alignment.Center
+        ) {
+            Text("EJEMPLO 1", fontSize = 24.sp, color = Color.Black)
+        }
+
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .weight(1f)
+        ) {
+            Box(
+                modifier = Modifier
+                    .weight(1f)
+                    .fillMaxHeight()
+                    .background(Color.Red),
+                contentAlignment = Alignment.Center
+            ) {
+                Text("EJEMPLO 2", fontSize = 20.sp, color = Color.Black)
+            }
+            Box(
+                modifier = Modifier
+                    .weight(1f)
+                    .fillMaxHeight()
+                    .background(Color.Green),
+                contentAlignment = Alignment.Center
+            ) {
+                Text("EJEMPLO 3", fontSize = 20.sp, color = Color.Black)
+            }
+        }
+
+        Box(
+            modifier = Modifier
+                .fillMaxWidth()
+                .weight(1f)
+                .background(Color.Magenta),
+            contentAlignment = Alignment.Center
+        ) {
+            Text("EJEMPLO 4", fontSize = 24.sp, color = Color.Black)
+        }
+    }
+}
